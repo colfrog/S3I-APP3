@@ -1,4 +1,4 @@
 package app3;
 
-public class Liaison {
+public class Liaison implements  Couche{
 }

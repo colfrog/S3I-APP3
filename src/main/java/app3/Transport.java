@@ -1,4 +1,4 @@
 package app3;
 
-public class Transport {
+public class Transport implements  Couche{
 }
