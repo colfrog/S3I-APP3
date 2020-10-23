@@ -1,0 +1,7 @@
+gradle/
+.gradle/
+.idea/workspace.xml
+build/
+out/
+gradlew
+gradlew.bat
