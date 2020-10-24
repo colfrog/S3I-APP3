@@ -11,7 +11,6 @@ public class Application extends CoucheProto {
     protected String in = null;
 
     public void send(String data) throws IOException {
-        socket = new DatagramSocket(4445);
         try {
             in = Files.readString(Path.of(data), StandardCharsets.US_ASCII);
         } catch (FileNotFoundException e) {
