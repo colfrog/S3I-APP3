@@ -3,8 +3,8 @@ package app3;
 import java.io.IOException;
 
 public class CoucheProto {
-    private Couche nextSend = null;
-    private Couche nextRecv = null;
+    protected Couche nextSend = null;
+    protected Couche nextRecv = null;
 
     public void send(String data) throws IOException {
         if (nextSend != null)

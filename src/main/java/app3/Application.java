@@ -14,6 +14,8 @@ public class Application extends CoucheProto {
     public void send(String data) throws IOException {
         try {
             in = Files.readString(Path.of(data), StandardCharsets.US_ASCII);
+            nextSend.send(in);
+
         } catch (FileNotFoundException e) {
             System.err.println("Could not open file. ");
         }
