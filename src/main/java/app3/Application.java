@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class Application implements Couche {
+public class Application extends CoucheProto {
     private String nomFichier;
     protected DatagramSocket socket = null;
     protected String in = null;
@@ -19,8 +19,8 @@ public class Application implements Couche {
         }
 
     }
-    
-    public void recv(String data) {
+
+    public void recv(String data) throws IOException {
         // data contient le contenu d'un fichier, écrit le fichier
     }
 }

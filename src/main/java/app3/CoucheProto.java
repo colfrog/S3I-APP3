@@ -1,10 +1,12 @@
 package app3;
 
+import java.io.IOException;
+
 public class CoucheProto {
     private Couche nextSend = null;
     private Couche nextRecv = null;
 
-    public void send(String data) {
+    public void send(String data) throws IOException {
         if (nextSend != null)
             nextSend.send(data);
     }
@@ -13,7 +15,7 @@ public class CoucheProto {
         nextSend = c;
     }
 
-    public void recv(String data) {
+    public void recv(String data) throws IOException {
         if (nextRecv != null)
             nextRecv.recv(data);
     }
