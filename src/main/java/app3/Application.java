@@ -11,7 +11,6 @@ public class Application implements Couche {
     protected String in = null;
 
     public void send(String data) throws IOException {
-        socket = new DatagramSocket(4445);
         try {
             in = Files.readString(Path.of(data), StandardCharsets.US_ASCII);
         } catch (FileNotFoundException e) {
@@ -21,7 +20,7 @@ public class Application implements Couche {
 
 
     }
-    public void recv(String data) {
+    public void recv(String data) throws IOException{
         File myFile = new File("filename.txt");
         try {
             FileWriter myWriter = new FileWriter("filename.txt");
