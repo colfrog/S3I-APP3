@@ -19,7 +19,12 @@ public class Application extends CoucheProto {
     }
 
     public void recv(String data) throws IOException {
-        File myFile = new File("filename.txt");
+        if (nomFichier == null) {
+            nomFichier = data;
+            return;
+        }
+
+        File myFile = new File(nomFichier);
         try {
             FileWriter myWriter = new FileWriter("filename.txt");
             myWriter.write(data);
