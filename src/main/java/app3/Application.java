@@ -17,10 +17,18 @@ public class Application extends CoucheProto {
         } catch (FileNotFoundException e) {
             System.err.println("Could not open file. ");
         }
-
     }
 
     public void recv(String data) throws IOException {
-        // data contient le contenu d'un fichier, écrit le fichier
+        File myFile = new File("filename.txt");
+        try {
+            FileWriter myWriter = new FileWriter("filename.txt");
+            myWriter.write(data);
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 }
