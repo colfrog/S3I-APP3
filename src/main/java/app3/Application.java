@@ -18,9 +18,20 @@ public class Application implements Couche {
             System.err.println("Could not open file. ");
         }
 
+
+
     }
-    
     public void recv(String data) {
-        // data contient le contenu d'un fichier, écrit le fichier
+        File myFile = new File("filename.txt");
+        try {
+            FileWriter myWriter = new FileWriter("filename.txt");
+            myWriter.write(data);
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
     }
 }
