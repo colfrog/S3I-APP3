@@ -9,6 +9,7 @@ public class Application extends CoucheProto {
     private String nomFichier;
     protected DatagramSocket socket = null;
     protected String in = null;
+    
 
     public void send(String data) throws IOException {
         try {
