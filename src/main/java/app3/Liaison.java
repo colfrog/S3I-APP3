@@ -8,13 +8,15 @@ import java.util.zip.CRC32;
 
 public class Liaison extends CoucheProto {
     private DatagramSocket socket = null;
-    CRC32 crc = new CRC32();
+    private InetAddress remote = null;
+    private CRC32 crc = new CRC32();
 
     public Liaison(int port) throws SocketException {
         socket = new DatagramSocket(port);
     }
 
     public void connect(InetAddress remote) {
+        this.remote = remote;
         socket.connect(remote, socket.getPort());
     }
 
@@ -25,8 +27,17 @@ public class Liaison extends CoucheProto {
         socket.send(dgram); // data contient id:morceau:crc
     }
 
-    public void listen() {
-         // Écoute sur la socket et envoie à recv
+    // TODO: Envoyer dans Serveur.java, créer un objet pour chaque couche par client
+    public void listen() throws java.io.IOException {
+        byte[] buf = new byte[256];
+        DatagramPacket dgram = new DatagramPacket(buf, buf.length);
+
+        // Écoute sur la socket et envoie à recv
+        while (true) {
+            socket.receive(dgram);
+            this.remote = dgram.getAddress();
+            recv(new String(dgram.getData()));
+        }
     }
 
     public void recv(final String data) throws java.io.IOException {
