@@ -31,7 +31,7 @@ public class Client {
             data = new String(packet.getData()).substring(0, packet.getLength());
             System.out.println("<-- " + data);
 
-            if (data == "OKTHX") {
+            if (data.equals("OKTHX")) {
                 System.out.println("done");
                 return;
             } else if (data.startsWith("Missing")) {

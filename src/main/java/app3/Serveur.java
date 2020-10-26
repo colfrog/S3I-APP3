@@ -19,11 +19,13 @@ public class Serveur {
 
         Couche handler;
         InetAddress remote;
+        int remotePort;
         while (true) {
             socket.receive(dgram);
             remote = dgram.getAddress();
+            remotePort = dgram.getPort();
             if (!handlers.containsKey(remote))
-                handlers.put(remote, newHandler(socket, remote, port));
+                handlers.put(remote, newHandler(socket, remote, remotePort));
 
             handlers.get(remote).recv(new String(dgram.getData()).substring(0, dgram.getLength()));
         }
