@@ -14,7 +14,7 @@ public class Application extends CoucheProto {
         nextCouche.send(nomFichier + ':' + contenu); // data contient nomFichier:contenu
     }
 
-    public void recv(final String data) throws java.io.IOException {
+    public void recv(final String data) throws java.io.IOException, MissingPacketException {
         if (nomFichier == null) {
             nomFichier = data;
             return;

@@ -40,14 +40,22 @@ public class Liaison extends CoucheProto {
         }
     }
 
-    public void recv(final String data) throws java.io.IOException {
+    public void recv(final String data) throws java.io.IOException, MissingPacketException {
         // data contient un paquet avec checksum, vérifie le checksum et envoie à nextCouche
         int sep = data.lastIndexOf(':');
         String paquet = data.substring(0, sep);
         long crcPaquet = Long.parseLong(data.substring(sep + 1));
 
         crc.update(paquet.getBytes());
-        if (crc.getValue() == crcPaquet)
-            nextCouche.recv(paquet);
+        if (crc.getValue() == crcPaquet){
+            try {
+                nextCouche.recv(paquet);
+            }
+            catch (MissingPacketException e){
+
+            }
+        }
+
+
     }
 }

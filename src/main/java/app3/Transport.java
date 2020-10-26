@@ -28,7 +28,7 @@ public class Transport extends CoucheProto {
         nextCouche.send("FIN");
     }
 
-    public void recv(final String data) throws java.io.IOException {
+    public void recv(final String data) throws java.io.IOException, MissingPacketException {
         // Si c'est le dernier, vérifie et envoie à nextCouche, sauf s'il y a une erreur de vérification
         if (data == "FIN") {
             List<Integer> missing = getMissingPackets();
@@ -36,7 +36,7 @@ public class Transport extends CoucheProto {
                 String contenu = unpackData();
                 nextCouche.recv(contenu);
             } else {
-                // TODO: Envoyer les id de paquets manquants à la couche liaison
+                throw new MissingPacketException(missing);
             }
 
             return;

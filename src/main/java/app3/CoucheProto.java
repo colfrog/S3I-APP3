@@ -10,7 +10,7 @@ public class CoucheProto {
             nextCouche.send(data);
     }
 
-    public void recv(final String data) throws java.io.IOException {
+    public void recv(final String data) throws java.io.IOException, MissingPacketException {
         if (nextCouche != null)
             nextCouche.recv(data);
     }
