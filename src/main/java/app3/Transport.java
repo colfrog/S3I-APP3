@@ -1,7 +1,7 @@
 package app3;
 
 public class Transport extends CoucheProto {
-    public void send(String data) throws IOException {
+    public void send(String data) {
         List<String> morceaux = packageData(data);
 
         // envoyer le titre du fichier
@@ -23,14 +23,14 @@ public class Transport extends CoucheProto {
         // data contient un fichier complet. Sépare en paquets de 128 octets et envoie à nextSend.
         List<String> morceaux;
         String morceau = null;
-        int i = 0, offset = 0, size = 128, remaining = 0;
 
-        while (i < data.length()) {
-            remaining = data.length() - offset;
-            if (remaining < 128)
-                size = remaining;
+        if (data.length() == 0)
+            return;
 
-            morceau = data.substring(i + offset, i + offset + size);
+        int index = 0;
+        final int size = 128;
+        while (index < data.length()) {
+            morceau = data.substring(index, Math.min(i + size, data.length()));
             morceaux.add(morceau);
 
             i += size;
