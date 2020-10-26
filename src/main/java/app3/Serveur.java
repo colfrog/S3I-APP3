@@ -11,7 +11,7 @@ import java.util.Map;
 public class Serveur {
     private static Map<InetAddress, Couche> handlers = new HashMap<InetAddress, Couche>();
 
-    public static void main() throws IOException, MissingPacketsException {
+    public static void main(String[] args) throws IOException, MissingPacketsException {
         int port = 1337;
         DatagramSocket socket = new DatagramSocket(port);
         byte[] buf = new byte[256];

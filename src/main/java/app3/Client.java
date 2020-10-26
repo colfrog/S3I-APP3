@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Client {
-    public static void main() throws java.io.IOException {
+    public static void main(String[] args) throws java.io.IOException {
         String nomFichier = "test.txt";
         InetAddress remote = InetAddress.getLocalHost();
         int port = 1337;
