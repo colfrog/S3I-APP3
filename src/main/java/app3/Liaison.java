@@ -39,8 +39,10 @@ public class Liaison extends CoucheProto {
         if (crc.getValue() == crcPaquet)
             try {
                 boolean done = nextCouche.recv(paquet);
-                if (done)
+                if (done) {
                     send("OKTHX");
+                    return done;
+                }
             } catch (MissingPacketsException e) {
                 String message = "Missing";
                 List<Integer> missing = e.getMissingPackets();
