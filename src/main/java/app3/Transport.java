@@ -34,8 +34,6 @@ public class Transport extends CoucheProto {
             if (missing.size() == 0) {
                 String contenu = unpackData();
                 nextCouche.recv(contenu);
-            } else {
-                // TODO: Envoyer les id de paquets manquants à la couche liaison
             }
 
             return null;
