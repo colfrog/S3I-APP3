@@ -58,8 +58,8 @@ public class Transport extends CoucheProto {
             }
         }
 
-        // Si c'est le premier, il contient le nom et le nombre de paquets. Envoie le nom à nextCouche
-        if (nomFichier == null) {
+        // Si c'est la première commande, data contient le nom et le nombre de paquets. Envoie le nom à nextCouche
+        if (nomFichier == null && data.startsWith("%")) {
             readMetadata(data);
             nextCouche.recv(this.nomFichier);
             return false;

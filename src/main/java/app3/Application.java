@@ -20,9 +20,9 @@ public class Application extends CoucheProto {
             return false;
         }
 
-        FileWriter myWriter = new FileWriter(nomFichier);
-        myWriter.write(data);
-        myWriter.close();
+        FileWriter writer = new FileWriter(nomFichier);
+        writer.write(data);
+        writer.close();
         return true;
     }
 }

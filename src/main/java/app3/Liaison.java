@@ -9,32 +9,25 @@ import java.util.zip.CRC32;
 
 public class Liaison extends CoucheProto {
     private CRC32 crc = new CRC32();
-    private DatagramSocket socket;
-    private InetAddress remote;
-    private int port;
-
-    public Liaison(DatagramSocket socket, InetAddress remote, int port) {
-        this.socket = socket;
-        this.remote = remote;
-        this.port = port;
-    }
 
     public void send(final String data) throws java.io.IOException {
+        if (data.startsWith("%")) {
+            nextCouche.send(data); // data contient une commande
+            return;
+        }
+
         crc.reset();
         crc.update(data.getBytes());
         String contenu = data;
-        if (!contenu.startsWith("%"))
-            contenu = sabotage(contenu);
-
-        String paquet = contenu + ':' + crc.getValue(); // data contient id:morceau:crc
-        DatagramPacket dgram = new DatagramPacket(paquet.getBytes(), paquet.getBytes().length, this.remote, this.port);
-        System.out.println("--> " + paquet);
-        socket.send(dgram);
+        // contenu = sabotage(contenu);
+        nextCouche.send(contenu + ':' + crc.getValue()); // data contient id:morceau:crc
     }
 
-    public boolean recv(final String data) throws java.io.IOException {
+    public boolean recv(final String data) throws java.io.IOException, MissingPacketsException, TransmissionErrorException {
+        if (data.startsWith("%"))
+            return nextCouche.recv(data); // data contient une commande
+
         // data contient un paquet avec checksum, vérifie le checksum et envoie à nextCouche
-        System.out.println("<-- " + data);
         int sep = data.lastIndexOf(':');
         if (sep == -1)
             return false;
@@ -46,23 +39,7 @@ public class Liaison extends CoucheProto {
         crc.reset();
         crc.update(paquet.getBytes());
         if (crc.getValue() == crcPaquet) {
-            try {
-                boolean done = nextCouche.recv(paquet);
-                if (done) {
-                    send("%OKTHX%");
-                    return done;
-                }
-            } catch (MissingPacketsException e) {
-                String message = "%MISSING%";
-                List<Integer> missing = e.getMissingPackets();
-                for (int i = 0; i < missing.size(); i++) {
-                    message += ":" + missing.get(i).toString();
-                }
-
-                send(message);
-            } catch (TransmissionErrorException e) {
-                send("%ERROR%");
-            }
+            return nextCouche.recv(paquet);
         } else {
             System.out.println("packet dropped: " + data);
         }

@@ -34,12 +34,14 @@ public class Serveur {
     }
 
     private static Couche newHandler(DatagramSocket socket, InetAddress remote, int port) {
-        Liaison liaison = new Liaison(socket, remote, port);
+        Physique physique = new Physique(socket, remote, port);
+        Liaison liaison = new Liaison();
         Transport transport = new Transport();
         Application application = new Application();
+        physique.setNextCouche(liaison);
         liaison.setNextCouche(transport);
         transport.setNextCouche(application);
 
-        return liaison;
+        return physique;
     }
 }

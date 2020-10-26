@@ -16,9 +16,11 @@ public class Client {
 
         Application application = new Application();
         Transport transport = new Transport();
-        Liaison liaison = new Liaison(socket, remote, port);
+        Liaison liaison = new Liaison();
+        Physique physique = new Physique(socket, remote, port);
         application.setNextCouche(transport);
         transport.setNextCouche(liaison);
+        liaison.setNextCouche(physique);
 
         application.send(nomFichier);
 
@@ -39,8 +41,7 @@ public class Client {
                 return;
             } else if (data.startsWith("%MISSING%")) {
                 int sep = data.indexOf(':');
-                int crcSep = data.lastIndexOf(':');
-                String[] ids = data.substring(sep + 1, crcSep).split(":");
+                String[] ids = data.substring(sep + 1).split(":");
                 for (String id : ids)
                     missing.add(Integer.parseInt(id));
 
