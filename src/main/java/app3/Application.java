@@ -23,7 +23,6 @@ public class Application extends CoucheProto {
         FileWriter myWriter = new FileWriter(nomFichier);
         myWriter.write(data);
         myWriter.close();
-        System.out.println("Successfully wrote " + nomFichier);
         return true;
     }
 }

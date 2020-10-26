@@ -21,8 +21,12 @@ public class Liaison extends CoucheProto {
 
     public void send(final String data) throws java.io.IOException {
         crc.update(data.getBytes());
-        String paquet = data + ':' + crc.getValue(); // data contient id:morceau:crc
-        DatagramPacket dgram = new DatagramPacket(paquet.getBytes(), paquet.length(), this.remote, this.port);
+        String contenu = data;
+        if (!contenu.startsWith("FIN") && !contenu.startsWith("Missing"))
+            contenu = sabotage(contenu);
+
+        String paquet = contenu + ':' + crc.getValue(); // data contient id:morceau:crc
+        DatagramPacket dgram = new DatagramPacket(paquet.getBytes(), paquet.getBytes().length, this.remote, this.port);
         System.out.println("--> " + paquet);
         socket.send(dgram);
     }
@@ -31,12 +35,15 @@ public class Liaison extends CoucheProto {
         // data contient un paquet avec checksum, vérifie le checksum et envoie à nextCouche
         System.out.println("<-- " + data);
         int sep = data.lastIndexOf(':');
+        if (sep == -1)
+            return false;
+
         String paquet = data.substring(0, sep);
         String crcStr = data.substring(sep + 1);
         long crcPaquet = Long.parseLong(crcStr);
 
         crc.update(paquet.getBytes());
-        if (crc.getValue() == crcPaquet)
+        if (crc.getValue() == crcPaquet) {
             try {
                 boolean done = nextCouche.recv(paquet);
                 if (done) {
@@ -52,11 +59,14 @@ public class Liaison extends CoucheProto {
 
                 send(message);
             }
+        } else {
+            System.out.println("packet dropped: " + data);
+        }
 
         return false;
     }
 
-    public String Sabotage(String data){
+    public String sabotage(String data){
         byte[] byteArray = data.getBytes();
         int index = (int)(Math.random()*(byteArray.length));
         int bitToChange = (int)(Math.random()*8);

@@ -10,6 +10,9 @@ public class Transport extends CoucheProto {
 
     public void send(final String data) throws java.io.IOException {
         int sep = data.indexOf(':');
+        if (sep == -1)
+            return;
+
         nomFichier = data.substring(0, sep);
         String contenu = data.substring(sep + 1);
 
@@ -58,6 +61,9 @@ public class Transport extends CoucheProto {
 
         // Si ce n'est pas le dernier, garde-le en mémoire
         int sep = data.indexOf(':');
+        if (sep == -1)
+            return false;
+
         int id = Integer.parseInt(data.substring(0, sep));
         String morceau = data.substring(sep + 1);
         paquets[id] = morceau;

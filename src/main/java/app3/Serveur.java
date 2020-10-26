@@ -27,8 +27,8 @@ public class Serveur {
             if (!handlers.containsKey(remote))
                 handlers.put(remote, newHandler(socket, remote, remotePort));
 
-            // recv retourne true s'il a terminé.
-            if (handlers.get(remote).recv(new String(dgram.getData()).substring(0, dgram.getLength())))
+            // recv retourne true s'il a terminé
+            if (handlers.get(remote).recv(new String(dgram.getData()).substring(0, dgram.getLength()).trim()))
                 handlers.remove(remote);
         }
     }

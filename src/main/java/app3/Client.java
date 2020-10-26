@@ -28,7 +28,7 @@ public class Client {
         List<Integer> missing = new ArrayList<Integer>();
         while (true) {
             socket.receive(packet);
-            data = new String(packet.getData()).substring(0, packet.getLength());
+            data = new String(packet.getData()).substring(0, packet.getLength()).trim();
             System.out.println("<-- " + data);
 
             if (data.equals("OKTHX")) {
