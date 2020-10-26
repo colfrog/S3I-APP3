@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Transport extends CoucheProto {
     private String nomFichier = null;
+    private String[] paquets = null;
     private int nPaquets = 0;
 
     public void send(final String data) throws java.io.IOException {
@@ -28,10 +29,31 @@ public class Transport extends CoucheProto {
     }
 
     public void recv(final String data) throws java.io.IOException {
-        // data contient un paquet
+        // Si c'est le dernier, vérifie et envoie à nextCouche, sauf s'il y a une erreur de vérification
+        if (data == "FIN") {
+            List<Integer> missing = getMissingPackets();
+            if (missing.size() == 0) {
+                String contenu = unpackData();
+                nextCouche.recv(contenu);
+            } else {
+                // TODO: Envoyer les id de paquets manquants à la couche liaison
+            }
+
+            return;
+        }
+
         // Si c'est le premier, il contient le nom et le nombre de paquets. Envoie le nom à nextCouche
+        if (nomFichier == null) {
+            readMetadata(data);
+            nextCouche.recv(this.nomFichier);
+            return;
+        }
+
         // Si ce n'est pas le dernier, garde-le en mémoire
-        // Si c'est le dernier, vérifie et envoie à nextRecv, sauf s'il y a une erreur de vérification
+        int sep = data.indexOf(':');
+        int id = Integer.parseInt(data.substring(0, sep));
+        String morceau = data.substring(sep + 1);
+        paquets[id] = morceau;
     }
 
     private List<String> packageData(final String data) {
@@ -52,5 +74,29 @@ public class Transport extends CoucheProto {
         }
 
         return morceaux;
+    }
+
+    private String unpackData() {
+        String contenu = "";
+        for (int i = 0; i < nPaquets; i++)
+            contenu += paquets[i];
+
+        return contenu;
+    }
+
+    private void readMetadata(final String data) {
+        int sep = data.indexOf(':');
+        nomFichier = data.substring(0, sep);
+        nPaquets = Integer.parseInt(data.substring(sep + 1));
+        paquets = new String[nPaquets];
+    }
+
+    private List<Integer> getMissingPackets() {
+        List<Integer> missing = new ArrayList<Integer>();
+        for (int i = 0; i < nPaquets; i++)
+            if (paquets[i] == null)
+                missing.add(i);
+
+        return missing;
     }
 }

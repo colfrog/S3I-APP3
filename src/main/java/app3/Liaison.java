@@ -8,6 +8,7 @@ import java.util.zip.CRC32;
 
 public class Liaison extends CoucheProto {
     private DatagramSocket socket = null;
+    CRC32 crc = new CRC32();
 
     public Liaison(int port) throws SocketException {
         socket = new DatagramSocket(port);
@@ -18,7 +19,6 @@ public class Liaison extends CoucheProto {
     }
 
     public void send(final String data) throws java.io.IOException {
-        CRC32 crc = new CRC32();
         crc.update(data.getBytes());
         String paquet = data + ':' + crc.getValue();
         DatagramPacket dgram = new DatagramPacket(paquet.getBytes(), paquet.length());
@@ -31,5 +31,12 @@ public class Liaison extends CoucheProto {
 
     public void recv(final String data) throws java.io.IOException {
         // data contient un paquet avec checksum, vérifie le checksum et envoie à nextCouche
+        int sep = data.lastIndexOf(':');
+        String paquet = data.substring(0, sep);
+        long crcPaquet = Long.parseLong(data.substring(sep + 1));
+
+        crc.update(paquet.getBytes());
+        if (crc.getValue() == crcPaquet)
+            nextCouche.recv(paquet);
     }
 }
