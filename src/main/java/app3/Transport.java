@@ -8,7 +8,7 @@ public class Transport extends CoucheProto {
     private String[] paquets = null;
     private int nPaquets = 0;
 
-    public String send(final String data) throws java.io.IOException {
+    public void send(final String data) throws java.io.IOException {
         int sep = data.indexOf(':');
         nomFichier = data.substring(0, sep);
         String contenu = data.substring(sep + 1);
@@ -28,7 +28,6 @@ public class Transport extends CoucheProto {
         }
 
         nextCouche.send("FIN");
-        return null;
     }
 
     public void sendMissing(final List<Integer> missing) throws java.io.IOException {
@@ -38,29 +37,22 @@ public class Transport extends CoucheProto {
         nextCouche.send("FIN");
     }
 
-    public String recv(final String data) throws java.io.IOException {
+    public void recv(final String data) throws java.io.IOException, MissingPacketsException {
         // Si c'est le dernier, vérifie et envoie à nextCouche, sauf s'il y a une erreur de vérification
         if (data == "FIN") {
             List<Integer> missing = getMissingPackets();
-            String returnString = "Missing";
             if (missing.size() == 0) {
                 String contenu = unpackData();
                 nextCouche.recv(contenu);
+            } else {
+                throw new MissingPacketsException(missing);
             }
-            else{
-                for(int i=0; i<missing.size();i++){
-                    returnString+= ":" + missing.get(i).toString();
-                }
-                return returnString;
-            }
-            return null;
         }
 
         // Si c'est le premier, il contient le nom et le nombre de paquets. Envoie le nom à nextCouche
         if (nomFichier == null) {
             readMetadata(data);
             nextCouche.recv(this.nomFichier);
-            return null;
         }
 
         // Si ce n'est pas le dernier, garde-le en mémoire
@@ -68,7 +60,6 @@ public class Transport extends CoucheProto {
         int id = Integer.parseInt(data.substring(0, sep));
         String morceau = data.substring(sep + 1);
         paquets[id] = morceau;
-        return null;
     }
 
     private List<String> packageData(final String data) {
