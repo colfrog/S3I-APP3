@@ -30,6 +30,10 @@ public class Serveur {
             // recv retourne true s'il a terminé
             if (handlers.get(remote).recv(new String(dgram.getData()).substring(0, dgram.getLength()).trim()))
                 handlers.remove(remote);
+
+            // nettoie le buffer
+            for (int i = 0; i < buf.length; i++)
+                buf[i] = 0;
         }
     }
 

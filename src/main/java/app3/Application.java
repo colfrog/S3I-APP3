@@ -20,7 +20,7 @@ public class Application extends CoucheProto {
             return false;
         }
 
-        FileWriter writer = new FileWriter(nomFichier);
+        FileWriter writer = new FileWriter("resultats/" + nomFichier);
         writer.write(data);
         writer.close();
         return true;
