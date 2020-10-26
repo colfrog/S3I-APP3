@@ -2,7 +2,7 @@ package app3;
 
 import java.util.List;
 
-public class MissingPacketsException extends Exception{
+public class MissingPacketsException extends Exception {
     List<Integer> missing;
 
     MissingPacketsException(List<Integer> missing){

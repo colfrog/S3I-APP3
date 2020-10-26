@@ -31,17 +31,21 @@ public class Client {
             data = new String(packet.getData()).substring(0, packet.getLength()).trim();
             System.out.println("<-- " + data);
 
-            if (data.equals("OKTHX")) {
+            if (data.equals("%OKTHX%")) {
                 System.out.println("done");
                 return;
-            } else if (data.startsWith("Missing")) {
+            } else if (data.equals("%ERROR%")) {
+                System.out.println("failure");
+                return;
+            } else if (data.startsWith("%MISSING%")) {
                 int sep = data.indexOf(':');
-                String[] ids = data.substring(sep + 1).split(":");
+                int crcSep = data.lastIndexOf(':');
+                String[] ids = data.substring(sep + 1, crcSep).split(":");
                 for (String id : ids)
                     missing.add(Integer.parseInt(id));
 
                 transport.sendMissing(missing);
-                transport.send("FIN");
+                transport.send("%FIN%");
             }
         }
     }

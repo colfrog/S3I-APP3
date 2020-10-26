@@ -7,6 +7,7 @@ public class Transport extends CoucheProto {
     private String nomFichier = null;
     private String[] paquets = null;
     private int nPaquets = 0;
+    private int nErrors = 0;
 
     public void send(final String data) throws java.io.IOException {
         int sep = data.indexOf(':');
@@ -19,7 +20,7 @@ public class Transport extends CoucheProto {
         List<String> morceaux = packageData(contenu);
 
         // envoyer le titre du fichier et le nombre de paquets
-        nextCouche.send(nomFichier + ':' + morceaux.size());
+        nextCouche.send('%' + nomFichier + ':' + morceaux.size());
 
         // envoyer les paquets et un identificateur pour chaque
         Integer id = 0;
@@ -30,25 +31,30 @@ public class Transport extends CoucheProto {
             nextCouche.send((id++).toString() + ':' + morceau); // data contient id:morceau
         }
 
-        nextCouche.send("FIN");
+        nextCouche.send("%FIN%");
     }
 
     public void sendMissing(final List<Integer> missing) throws java.io.IOException {
-        for (int id : missing)
-            nextCouche.send(id + ':' + paquets[id]);
+        for (Integer id : missing) {
+            System.out.println(id);
+            nextCouche.send(id.toString() + ':' + paquets[id]);
+        }
 
-        nextCouche.send("FIN");
+        nextCouche.send("%FIN%");
     }
 
-    public boolean recv(final String data) throws java.io.IOException, MissingPacketsException {
+    public boolean recv(final String data) throws java.io.IOException, MissingPacketsException, TransmissionErrorException {
         // Si c'est le dernier, vérifie et envoie à nextCouche, sauf s'il y a une erreur de vérification
-        if (data.equals("FIN")) {
+        if (data.equals("%FIN%")) {
             List<Integer> missing = getMissingPackets();
             if (missing.size() == 0) {
                 String contenu = unpackData();
                 return nextCouche.recv(contenu);
             } else {
-                throw new MissingPacketsException(missing);
+                if (++nErrors < 3)
+                    throw new MissingPacketsException(missing);
+                else
+                    throw new TransmissionErrorException();
             }
         }
 
@@ -97,7 +103,7 @@ public class Transport extends CoucheProto {
 
     private void readMetadata(final String data) {
         int sep = data.indexOf(':');
-        nomFichier = data.substring(0, sep);
+        nomFichier = data.substring(1, sep);
         nPaquets = Integer.parseInt(data.substring(sep + 1));
         paquets = new String[nPaquets];
     }

@@ -20,9 +20,10 @@ public class Liaison extends CoucheProto {
     }
 
     public void send(final String data) throws java.io.IOException {
+        crc.reset();
         crc.update(data.getBytes());
         String contenu = data;
-        if (!contenu.startsWith("FIN") && !contenu.startsWith("Missing"))
+        if (!contenu.startsWith("%"))
             contenu = sabotage(contenu);
 
         String paquet = contenu + ':' + crc.getValue(); // data contient id:morceau:crc
@@ -42,22 +43,25 @@ public class Liaison extends CoucheProto {
         String crcStr = data.substring(sep + 1);
         long crcPaquet = Long.parseLong(crcStr);
 
+        crc.reset();
         crc.update(paquet.getBytes());
         if (crc.getValue() == crcPaquet) {
             try {
                 boolean done = nextCouche.recv(paquet);
                 if (done) {
-                    send("OKTHX");
+                    send("%OKTHX%");
                     return done;
                 }
             } catch (MissingPacketsException e) {
-                String message = "Missing";
+                String message = "%MISSING%";
                 List<Integer> missing = e.getMissingPackets();
                 for (int i = 0; i < missing.size(); i++) {
                     message += ":" + missing.get(i).toString();
                 }
 
                 send(message);
+            } catch (TransmissionErrorException e) {
+                send("%ERROR%");
             }
         } else {
             System.out.println("packet dropped: " + data);
