@@ -28,9 +28,11 @@ public class Client {
         List<Integer> missing = new ArrayList<Integer>();
         while (true) {
             socket.receive(packet);
-            data = new String(packet.getData());
+            data = new String(packet.getData()).trim();
             System.out.println("<-- " + data);
+
             if (data == "OKTHX") {
+                System.out.println("done");
                 return;
             } else if (data.startsWith("Missing")) {
                 int sep = data.indexOf(':');

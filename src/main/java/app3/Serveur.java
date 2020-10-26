@@ -25,7 +25,7 @@ public class Serveur {
             if (!handlers.containsKey(remote))
                 handlers.put(remote, newHandler(socket, remote, port));
 
-            handlers.get(remote).recv(new String(dgram.getData()));
+            handlers.get(remote).recv(new String(dgram.getData()).trim());
         }
     }
 

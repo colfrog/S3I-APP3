@@ -32,8 +32,9 @@ public class Liaison extends CoucheProto {
         System.out.println("<-- " + data);
         int sep = data.lastIndexOf(':');
         String paquet = data.substring(0, sep);
-        System.out.println(data);
-        long crcPaquet = Long.parseLong(data.substring(sep + 1));
+        String crcStr = data.substring(sep + 1);
+
+        long crcPaquet = Long.parseLong(crcStr);
 
         crc.update(paquet.getBytes());
         if (crc.getValue() == crcPaquet)
