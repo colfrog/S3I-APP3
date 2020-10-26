@@ -8,14 +8,12 @@ public class Transport extends CoucheProto {
     private String[] paquets = null;
     private int nPaquets = 0;
 
-    public void send(final String data) throws java.io.IOException {
+    public String send(final String data) throws java.io.IOException {
         int sep = data.indexOf(':');
         nomFichier = data.substring(0, sep);
         String contenu = data.substring(sep + 1);
 
         List<String> morceaux = packageData(contenu);
-        if (morceaux == null)
-            return;
 
         // envoyer le titre du fichier et le nombre de paquets
         nextCouche.send(nomFichier + ':' + morceaux.size());
@@ -26,9 +24,10 @@ public class Transport extends CoucheProto {
             nextCouche.send(id++ + ':' + morceau); // data contient id:morceau
 
         nextCouche.send("FIN");
+        return null;
     }
 
-    public void recv(final String data) throws java.io.IOException {
+    public String recv(final String data) throws java.io.IOException {
         // Si c'est le dernier, vérifie et envoie à nextCouche, sauf s'il y a une erreur de vérification
         if (data == "FIN") {
             List<Integer> missing = getMissingPackets();
@@ -39,14 +38,14 @@ public class Transport extends CoucheProto {
                 // TODO: Envoyer les id de paquets manquants à la couche liaison
             }
 
-            return;
+            return null;
         }
 
         // Si c'est le premier, il contient le nom et le nombre de paquets. Envoie le nom à nextCouche
         if (nomFichier == null) {
             readMetadata(data);
             nextCouche.recv(this.nomFichier);
-            return;
+            return null;
         }
 
         // Si ce n'est pas le dernier, garde-le en mémoire
@@ -54,15 +53,13 @@ public class Transport extends CoucheProto {
         int id = Integer.parseInt(data.substring(0, sep));
         String morceau = data.substring(sep + 1);
         paquets[id] = morceau;
+        return null;
     }
 
     private List<String> packageData(final String data) {
         // data contient un fichier complet. Sépare en paquets de 128 octets et envoie à nextSend.
         List<String> morceaux = new ArrayList<String>();
         String morceau = null;
-
-        if (data.length() == 0)
-            return null;
 
         int i = 0;
         final int size = 128;

@@ -5,13 +5,17 @@ public class CoucheProto {
 
     public void setNextCouche(Couche c) { nextCouche = c; }
 
-    public void send(final String data) throws java.io.IOException {
+    public String send(final String data) throws java.io.IOException {
         if (nextCouche != null)
-            nextCouche.send(data);
+            return nextCouche.send(data);
+
+        return null;
     }
 
-    public void recv(final String data) throws java.io.IOException {
+    public String recv(final String data) throws java.io.IOException {
         if (nextCouche != null)
-            nextCouche.recv(data);
+            return nextCouche.recv(data);
+
+        return null;
     }
 }

@@ -8,21 +8,22 @@ import java.nio.file.Path;
 public class Application extends CoucheProto {
     private String nomFichier = null;
 
-    public void send(final String data) throws java.io.IOException {
+    public String send(final String data) throws java.io.IOException {
         nomFichier = data;
         String contenu = Files.readString(Path.of(nomFichier), StandardCharsets.UTF_8);
-        nextCouche.send(nomFichier + ':' + contenu); // data contient nomFichier:contenu
+        return nextCouche.send(nomFichier + ':' + contenu); // data contient nomFichier:contenu
     }
 
-    public void recv(final String data) throws java.io.IOException {
+    public String recv(final String data) throws java.io.IOException {
         if (nomFichier == null) {
             nomFichier = data;
-            return;
+            return null;
         }
 
         FileWriter myWriter = new FileWriter(nomFichier);
         myWriter.write(data);
         myWriter.close();
         System.out.println("Successfully wrote " + nomFichier);
+        return "OKTHX";
     }
 }
