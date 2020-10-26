@@ -20,11 +20,22 @@ public class Transport extends CoucheProto {
 
         // envoyer les paquets et un identificateur pour chaque
         int id = 0;
-        for (String morceau : morceaux)
+        nPaquets = morceaux.size();
+        paquets = new String[nPaquets];
+        for (String morceau : morceaux) {
+            paquets[id] = morceau;
             nextCouche.send(id++ + ':' + morceau); // data contient id:morceau
+        }
 
         nextCouche.send("FIN");
         return null;
+    }
+
+    public void sendMissing(final List<Integer> missing) throws java.io.IOException {
+        for (int id : missing)
+            nextCouche.send(id + ':' + paquets[id]);
+
+        nextCouche.send("FIN");
     }
 
     public String recv(final String data) throws java.io.IOException {
@@ -38,7 +49,7 @@ public class Transport extends CoucheProto {
             }
             else{
                 for(int i=0; i<missing.size();i++){
-                    returnString+= ":" + missing.get(i).toString() ;
+                    returnString+= ":" + missing.get(i).toString();
                 }
                 return returnString;
             }
