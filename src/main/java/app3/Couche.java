@@ -1,11 +1,9 @@
 package app3;
 
-import java.io.IOException;
-
 public interface Couche {
-    public void send(String data) throws IOException;
+    public void send(final String data) throws java.io.IOException;
     public void setNextSend(Couche c);
     
-    public void recv(String data) throws IOException;
+    public void recv(final String data) throws java.io.IOException;
     public void setNextRecv(Couche c);
 }

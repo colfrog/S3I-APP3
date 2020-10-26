@@ -1,31 +1,28 @@
 package app3;
 
+import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class Application extends CoucheProto {
     private String nomFichier = null;
 
-    public void send(String data) {
-        try {
-            String in = Files.readString(Path.of(data), StandardCharsets.UTF_8);
-            nextCouche.send(in);
-        } catch (FileNotFoundException e) {
-            System.err.println("Could not open file.");
-        }
+    public void send(final String data) throws java.io.IOException {
+        nomFichier = data;
+        String contenu = Files.readString(Path.of(nomFichier), StandardCharsets.UTF_8);
+        nextCouche.send(nomFichier + ':' + contenu); // data contient nomFichier:contenu
     }
 
-    public void recv(String data) {
+    public void recv(final String data) throws java.io.IOException {
         if (nomFichier == null) {
             nomFichier = data;
             return;
         }
 
-        try {
-            FileWriter myWriter = new FileWriter(nomFichier);
-            myWriter.write(data);
-            myWriter.close();
-            System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+        FileWriter myWriter = new FileWriter(nomFichier);
+        myWriter.write(data);
+        myWriter.close();
+        System.out.println("Successfully wrote " + nomFichier);
     }
 }
