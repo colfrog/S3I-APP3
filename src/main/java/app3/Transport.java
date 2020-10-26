@@ -19,12 +19,12 @@ public class Transport extends CoucheProto {
         nextCouche.send(nomFichier + ':' + morceaux.size());
 
         // envoyer les paquets et un identificateur pour chaque
-        int id = 0;
+        Integer id = 0;
         nPaquets = morceaux.size();
         paquets = new String[nPaquets];
         for (String morceau : morceaux) {
             paquets[id] = morceau;
-            nextCouche.send(id++ + ':' + morceau); // data contient id:morceau
+            nextCouche.send((id++).toString() + ':' + morceau); // data contient id:morceau
         }
 
         nextCouche.send("FIN");
@@ -39,7 +39,7 @@ public class Transport extends CoucheProto {
 
     public boolean recv(final String data) throws java.io.IOException, MissingPacketsException {
         // Si c'est le dernier, vérifie et envoie à nextCouche, sauf s'il y a une erreur de vérification
-        if (data == "FIN") {
+        if (data.equals("FIN")) {
             List<Integer> missing = getMissingPackets();
             if (missing.size() == 0) {
                 String contenu = unpackData();
