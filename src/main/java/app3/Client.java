@@ -11,7 +11,7 @@ public class Client {
         String nomFichier = "test.txt";
         InetAddress remote = InetAddress.getLocalHost();
         int port = 1337;
-        DatagramSocket socket = new DatagramSocket(port);
+        DatagramSocket socket = new DatagramSocket();
         socket.connect(remote, port);
 
         Application application = new Application();
