@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.CRC32;
 
 public class Liaison extends CoucheProto {
@@ -25,5 +26,21 @@ public class Liaison extends CoucheProto {
             return nextCouche.recv(paquet);
 
         return null;
+    }
+
+    public String Sabotage(String data){
+        byte[] byteArray = data.getBytes();
+        int index = (int)(Math.random()*(byteArray.length));
+        int bitToChange = (int)(Math.random()*8);
+        byte oldValue = byteArray[index];
+
+        int mask = 1 << bitToChange;
+        byteArray[index] = (byte) ((byteArray[index] & ~mask) | ((1 << bitToChange) & mask));
+
+        if(byteArray[index] == oldValue){
+            byteArray[index] = (byte) ((byteArray[index] & ~mask) | ((0 << bitToChange) & mask));
+        }
+
+        return new String(byteArray, StandardCharsets.UTF_8);
     }
 }
