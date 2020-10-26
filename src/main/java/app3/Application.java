@@ -1,32 +1,25 @@
 package app3;
-import java.io.*;
-import java.net.DatagramSocket;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class Application extends CoucheProto {
-    private String nomFichier;
-    protected DatagramSocket socket = null;
-    protected String in = null;
+    private String nomFichier = null;
 
-    public void send(String data) throws IOException {
+    public void send(String data) {
         try {
-            in = Files.readString(Path.of(data), StandardCharsets.US_ASCII);
+            String in = Files.readString(Path.of(data), StandardCharsets.UTF_8);
+            nextCouche.send(in);
         } catch (FileNotFoundException e) {
-            System.err.println("Could not open file. ");
+            System.err.println("Could not open file.");
         }
     }
 
-    public void recv(String data) throws IOException {
+    public void recv(String data) {
         if (nomFichier == null) {
             nomFichier = data;
             return;
         }
 
-        File myFile = new File(nomFichier);
         try {
-            FileWriter myWriter = new FileWriter("filename.txt");
+            FileWriter myWriter = new FileWriter(nomFichier);
             myWriter.write(data);
             myWriter.close();
             System.out.println("Successfully wrote to the file.");
