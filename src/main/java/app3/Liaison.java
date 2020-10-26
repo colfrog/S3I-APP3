@@ -22,14 +22,17 @@ public class Liaison extends CoucheProto {
     public void send(final String data) throws java.io.IOException {
         crc.update(data.getBytes());
         String paquet = data + ':' + crc.getValue(); // data contient id:morceau:crc
-        DatagramPacket dgram = new DatagramPacket(data.getBytes(), data.length(), this.remote, this.port);
+        DatagramPacket dgram = new DatagramPacket(paquet.getBytes(), paquet.length(), this.remote, this.port);
+        System.out.println("--> " + paquet);
         socket.send(dgram);
     }
 
     public boolean recv(final String data) throws java.io.IOException {
         // data contient un paquet avec checksum, vérifie le checksum et envoie à nextCouche
+        System.out.println("<-- " + data);
         int sep = data.lastIndexOf(':');
         String paquet = data.substring(0, sep);
+        System.out.println(data);
         long crcPaquet = Long.parseLong(data.substring(sep + 1));
 
         crc.update(paquet.getBytes());

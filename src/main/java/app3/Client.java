@@ -29,6 +29,7 @@ public class Client {
         while (true) {
             socket.receive(packet);
             data = new String(packet.getData());
+            System.out.println("<-- " + data);
             if (data == "OKTHX") {
                 return;
             } else if (data.startsWith("Missing")) {
