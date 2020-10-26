@@ -1,6 +1,6 @@
 package app3;
 
-public class CoucheProto {
+public class CoucheProto implements Couche {
     Couche nextCouche = null;
 
     public void setNextCouche(Couche c) { nextCouche = c; }

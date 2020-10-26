@@ -7,18 +7,7 @@ import java.net.SocketException;
 import java.util.zip.CRC32;
 
 public class Liaison extends CoucheProto {
-    private DatagramSocket socket = null;
-    private InetAddress remote = null;
     private CRC32 crc = new CRC32();
-
-    public Liaison(int port) throws SocketException {
-        socket = new DatagramSocket(port);
-    }
-
-    public void connect(InetAddress remote) {
-        this.remote = remote;
-        socket.connect(remote, socket.getPort());
-    }
 
     public String send(final String data) throws java.io.IOException {
         crc.update(data.getBytes());
