@@ -31,15 +31,13 @@ public class Transport extends CoucheProto {
         // Si c'est le dernier, vérifie et envoie à nextCouche, sauf s'il y a une erreur de vérification
         if (data == "FIN") {
             List<Integer> missing = getMissingPackets();
-            String returnString = "";
+            String returnString = "Missing";
             if (missing.size() == 0) {
                 String contenu = unpackData();
                 nextCouche.recv(contenu);
             }
             else{
-                returnString = missing.get(0).toString();
-
-                for(int i=1; i<missing.size();i++){
+                for(int i=0; i<missing.size();i++){
                     returnString+= ":" + missing.get(i).toString() ;
                 }
                 return returnString;
