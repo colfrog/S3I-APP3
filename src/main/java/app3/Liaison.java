@@ -26,7 +26,7 @@ public class Liaison extends CoucheProto {
         socket.send(dgram);
     }
 
-    public void recv(final String data) throws java.io.IOException {
+    public boolean recv(final String data) throws java.io.IOException {
         // data contient un paquet avec checksum, vérifie le checksum et envoie à nextCouche
         int sep = data.lastIndexOf(':');
         String paquet = data.substring(0, sep);
@@ -35,7 +35,9 @@ public class Liaison extends CoucheProto {
         crc.update(paquet.getBytes());
         if (crc.getValue() == crcPaquet)
             try {
-                nextCouche.recv(paquet);
+                boolean done = nextCouche.recv(paquet);
+                if (done)
+                    send("OKTHX");
             } catch (MissingPacketsException e) {
                 String message = "Missing";
                 List<Integer> missing = e.getMissingPackets();
@@ -45,6 +47,8 @@ public class Liaison extends CoucheProto {
 
                 send(message);
             }
+
+        return false;
     }
 
     public String Sabotage(String data){

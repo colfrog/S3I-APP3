@@ -10,8 +10,10 @@ public class CoucheProto implements Couche {
             nextCouche.send(data);
     }
 
-    public void recv(final String data) throws java.io.IOException, MissingPacketsException {
+    public boolean recv(final String data) throws java.io.IOException, MissingPacketsException {
         if (nextCouche != null)
-            nextCouche.recv(data);
+            return nextCouche.recv(data);
+
+        return false;
     }
 }

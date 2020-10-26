@@ -14,13 +14,16 @@ public class Application extends CoucheProto {
         nextCouche.send(nomFichier + ':' + contenu); // data contient nomFichier:contenu
     }
 
-    public void recv(final String data) throws java.io.IOException {
-        if (nomFichier == null)
+    public boolean recv(final String data) throws java.io.IOException {
+        if (nomFichier == null) {
             nomFichier = data;
+            return false;
+        }
 
         FileWriter myWriter = new FileWriter(nomFichier);
         myWriter.write(data);
         myWriter.close();
         System.out.println("Successfully wrote " + nomFichier);
+        return true;
     }
 }

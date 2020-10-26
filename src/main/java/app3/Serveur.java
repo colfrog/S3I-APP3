@@ -12,7 +12,7 @@ public class Serveur {
     private static Map<InetAddress, Couche> handlers = new HashMap<InetAddress, Couche>();
 
     public static void main(String[] args) throws IOException, MissingPacketsException {
-        int port = 1337;
+        int port = 1338;
         DatagramSocket socket = new DatagramSocket(port);
         byte[] buf = new byte[256];
         DatagramPacket dgram = new DatagramPacket(buf, buf.length);

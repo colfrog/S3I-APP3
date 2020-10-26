@@ -37,13 +37,13 @@ public class Transport extends CoucheProto {
         nextCouche.send("FIN");
     }
 
-    public void recv(final String data) throws java.io.IOException, MissingPacketsException {
+    public boolean recv(final String data) throws java.io.IOException, MissingPacketsException {
         // Si c'est le dernier, vérifie et envoie à nextCouche, sauf s'il y a une erreur de vérification
         if (data == "FIN") {
             List<Integer> missing = getMissingPackets();
             if (missing.size() == 0) {
                 String contenu = unpackData();
-                nextCouche.recv(contenu);
+                return nextCouche.recv(contenu);
             } else {
                 throw new MissingPacketsException(missing);
             }
@@ -53,6 +53,7 @@ public class Transport extends CoucheProto {
         if (nomFichier == null) {
             readMetadata(data);
             nextCouche.recv(this.nomFichier);
+            return false;
         }
 
         // Si ce n'est pas le dernier, garde-le en mémoire
@@ -60,6 +61,7 @@ public class Transport extends CoucheProto {
         int id = Integer.parseInt(data.substring(0, sep));
         String morceau = data.substring(sep + 1);
         paquets[id] = morceau;
+        return false;
     }
 
     private List<String> packageData(final String data) {
