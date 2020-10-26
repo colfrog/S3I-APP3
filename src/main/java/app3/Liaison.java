@@ -21,9 +21,12 @@ public class Liaison extends CoucheProto {
         long crcPaquet = Long.parseLong(data.substring(sep + 1));
 
         crc.update(paquet.getBytes());
+        String returnValue = "";
         if (crc.getValue() == crcPaquet)
-            return nextCouche.recv(paquet);
-
+            returnValue = nextCouche.recv(paquet);
+        if(returnValue != null && returnValue != "OKTHX"){
+            return returnValue;
+        }
         return null;
     }
 }
