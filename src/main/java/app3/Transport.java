@@ -54,6 +54,8 @@ public class Transport extends CoucheProto {
     /**
      * Demande a la couche de liaison de renvoyer les paquets manquants
      *
+     * @throws MissingPacketsException si des paquest sont manquants dans la transmission
+     * @throws TransmissionErrorException si plus de 3 erreurs de paquets surviennent
      * @return true si le mots clef de fin est obtenu et il ne manque aucun paquet
      * @return false si la toute l'information n'a pas encore ete recu
      * @param data  L'information contenu dans le paquet recu
@@ -122,7 +124,11 @@ public class Transport extends CoucheProto {
         nPaquets = Integer.parseInt(data.substring(sep + 1));
         paquets = new String[nPaquets];
     }
-
+    /**
+     * Detect les paquets manquant a la fin de la transmission
+     *
+     * @return La list contenant les ids de paquets manquant
+     */
     private List<Integer> getMissingPackets() {
         List<Integer> missing = new ArrayList<Integer>();
         for (int i = 0; i < nPaquets; i++)
