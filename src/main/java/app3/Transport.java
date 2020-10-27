@@ -93,8 +93,13 @@ public class Transport extends CoucheProto {
         return false;
     }
 
+    /**
+     * Sépare en paquets de 128 octets.
+     *
+     * @return une liste de String divise
+     * @param data Contient le contenu d'un fichier sous format String
+     */
     private List<String> packageData(final String data) {
-        // data contient un fichier complet. Sépare en paquets de 128 octets et envoie à nextSend.
         List<String> morceaux = new ArrayList<String>();
         String morceau = null;
 
