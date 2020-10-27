@@ -1,5 +1,6 @@
 package app3;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -20,7 +21,8 @@ public class Physique extends CoucheProto {
      *
      * @param data  La String final a envoyer au client
      */
-    public void send(final String data) throws java.io.IOException {
+
+    public void send(final String data) throws IOException {
         DatagramPacket dgram = new DatagramPacket(data.getBytes(), data.getBytes().length, this.remote, this.port);
         System.out.println("--> " + data);
         socket.send(dgram);
@@ -30,7 +32,8 @@ public class Physique extends CoucheProto {
      *
      * @param data  La String recu par le client
      */
-    public boolean recv(final String data) throws java.io.IOException {
+
+    public boolean recv(final String data) throws IOException {
         System.out.println("<-- " + data);
         try {
             boolean done = nextCouche.recv(data);
@@ -46,8 +49,8 @@ public class Physique extends CoucheProto {
             }
 
             send(message);
-        } catch (TransmissionErrorException e) {
-            send("%ERROR%");
+        } catch (TransmissionErrorException | IOException e) {
+            send("%ERROR%:" + e.toString());
         }
 
         return false;

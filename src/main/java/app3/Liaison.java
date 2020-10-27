@@ -23,7 +23,7 @@ public class Liaison extends CoucheProto {
         crc.reset();
         crc.update(data.getBytes());
         String contenu = data;
-        // contenu = sabotage(contenu);
+        contenu = sabotage(contenu);
         nextCouche.send(contenu + ':' + crc.getValue()); // data contient id:morceau:crc
     }
     /**
