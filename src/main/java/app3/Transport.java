@@ -110,6 +110,11 @@ public class Transport extends CoucheProto {
         return morceaux;
     }
 
+    /**
+     * Reconstruit le contenu du fichier en concatenant les paquets ensemble, en ordre
+     *
+     * @return Le contenu du fichier reconstruit
+     */
     private String unpackData() {
         String contenu = "";
         for (int i = 0; i < nPaquets; i++)
@@ -118,12 +123,18 @@ public class Transport extends CoucheProto {
         return contenu;
     }
 
+    /**
+     * Lit les métadonnées du paquet spécial dans data et place-les dans l'objet
+     *
+     * @param data  Un paquet contenant des métadonnées d'un fichier
+     */
     private void readMetadata(final String data) {
         int sep = data.indexOf(':');
         nomFichier = data.substring(1, sep);
         nPaquets = Integer.parseInt(data.substring(sep + 1));
         paquets = new String[nPaquets];
     }
+
     /**
      * Detect les paquets manquant a la fin de la transmission
      *
