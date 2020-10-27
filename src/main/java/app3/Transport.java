@@ -9,6 +9,11 @@ public class Transport extends CoucheProto {
     private int nPaquets = 0;
     private int nErrors = 0;
 
+    /**
+     * Separe, index et envoie l'information du fichier a la couche de liaison
+     *
+     * @param data  La String contenant l'information du fichier
+     */
     public void send(final String data) throws java.io.IOException {
         int sep = data.indexOf(':');
         if (sep == -1)
@@ -33,7 +38,11 @@ public class Transport extends CoucheProto {
 
         nextCouche.send("%FIN%");
     }
-
+    /**
+     * Demande a la couche de liaison de renvoyer les paquets manquants
+     *
+     * @param missing  La List des ids de paquets manquants
+     */
     public void sendMissing(final List<Integer> missing) throws java.io.IOException {
         for (Integer id : missing) {
             System.out.println(id);
@@ -42,7 +51,13 @@ public class Transport extends CoucheProto {
 
         nextCouche.send("%FIN%");
     }
-
+    /**
+     * Demande a la couche de liaison de renvoyer les paquets manquants
+     *
+     * @return true si le mots clef de fin est obtenu et il ne manque aucun paquet
+     * @return false si la toute l'information n'a pas encore ete recu
+     * @param data  L'information contenu dans le paquet recu
+     */
     public boolean recv(final String data) throws java.io.IOException, MissingPacketsException, TransmissionErrorException {
         // Si c'est le dernier, vérifie et envoie à nextCouche, sauf s'il y a une erreur de vérification
         if (data.equals("%FIN%")) {

@@ -15,13 +15,21 @@ public class Physique extends CoucheProto {
         this.remote = remote;
         this.port = port;
     }
-
+    /**
+     * Envoie la String final au serveur a l'aide d'un socket
+     *
+     * @param data  La String final a envoyer au client
+     */
     public void send(final String data) throws java.io.IOException {
         DatagramPacket dgram = new DatagramPacket(data.getBytes(), data.getBytes().length, this.remote, this.port);
         System.out.println("--> " + data);
         socket.send(dgram);
     }
-
+    /**
+     * Recoit la String final du client a l'aide d'un socket et reenvoie les ids de paquets manquants
+     *
+     * @param data  La String recu par le client
+     */
     public boolean recv(final String data) throws java.io.IOException {
         System.out.println("<-- " + data);
         try {

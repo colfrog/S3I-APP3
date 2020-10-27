@@ -9,7 +9,11 @@ import java.util.zip.CRC32;
 
 public class Liaison extends CoucheProto {
     private CRC32 crc = new CRC32();
-
+    /**
+     * Ajoute un checksum a l'information et l'envoie a la couche physique
+     *
+     * @param data  La String a envoyer a la couche physique
+     */
     public void send(final String data) throws java.io.IOException {
         if (data.startsWith("%")) {
             nextCouche.send(data); // data contient une commande
@@ -22,7 +26,11 @@ public class Liaison extends CoucheProto {
         // contenu = sabotage(contenu);
         nextCouche.send(contenu + ':' + crc.getValue()); // data contient id:morceau:crc
     }
-
+    /**
+     * Recoit l'information et verifie le checksum pour assurer la qualite de l'information
+     *
+     * @param data  La String recu par la couche physique
+     */
     public boolean recv(final String data) throws java.io.IOException, MissingPacketsException, TransmissionErrorException {
         if (data.startsWith("%"))
             return nextCouche.recv(data); // data contient une commande
@@ -46,7 +54,11 @@ public class Liaison extends CoucheProto {
 
         return false;
     }
-
+    /**
+     * Corrompt manuellement un bit aleatoire dans une String
+     *
+     * @param data  La String a corrompre
+     */
     public String sabotage(String data){
         byte[] byteArray = data.getBytes();
         int index = (int)(Math.random()*(byteArray.length));
