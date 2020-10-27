@@ -9,6 +9,7 @@ import java.util.zip.CRC32;
 
 public class Liaison extends CoucheProto {
     private CRC32 crc = new CRC32();
+
     /**
      * Ajoute un checksum a l'information et l'envoie a la couche physique
      *
@@ -26,6 +27,7 @@ public class Liaison extends CoucheProto {
         contenu = sabotage(contenu);
         nextCouche.send(contenu + ':' + crc.getValue()); // data contient id:morceau:crc
     }
+
     /**
      * Recoit l'information et verifie le checksum pour assurer la qualite de l'information
      *
@@ -54,6 +56,7 @@ public class Liaison extends CoucheProto {
 
         return false;
     }
+
     /**
      * Corrompt manuellement un bit aleatoire dans une String
      *
