@@ -124,7 +124,11 @@ public class Transport extends CoucheProto {
         nPaquets = Integer.parseInt(data.substring(sep + 1));
         paquets = new String[nPaquets];
     }
-
+    /**
+     * Detect les paquets manquant a la fin de la transmission
+     *
+     * @return La list contenant les ids de paquets manquant
+     */
     private List<Integer> getMissingPackets() {
         List<Integer> missing = new ArrayList<Integer>();
         for (int i = 0; i < nPaquets; i++)

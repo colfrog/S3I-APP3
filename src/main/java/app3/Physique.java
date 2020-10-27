@@ -11,6 +11,13 @@ public class Physique extends CoucheProto {
     private InetAddress remote;
     private int port;
 
+    /**
+     * Creer un objet de type physique qui permet de gerer un socket
+     *
+     * @param socket  L'objet de type socket a utiliser
+     * @param remote L'addresse vers lequel envoyer l'information
+     * @param port Le port vers lequel envoyer l'information
+     */
     public Physique(DatagramSocket socket, InetAddress remote, int port) {
         this.socket = socket;
         this.remote = remote;
