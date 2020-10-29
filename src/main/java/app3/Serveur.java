@@ -28,7 +28,7 @@ public class Serveur {
                 handlers.put(remote, newHandler(socket, remote, remotePort));
 
             // recv retourne true s'il a terminé
-            if (handlers.get(remote).recv(new String(dgram.getData()).substring(0, dgram.getLength()).trim()))
+            if (handlers.get(remote).recv(new String(dgram.getData()).trim()))
                 handlers.remove(remote);
 
             // nettoie le buffer

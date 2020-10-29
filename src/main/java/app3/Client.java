@@ -30,7 +30,7 @@ public class Client {
         List<Integer> missing = new ArrayList<Integer>();
         while (true) {
             socket.receive(packet);
-            data = new String(packet.getData()).substring(0, packet.getLength()).trim();
+            data = new String(packet.getData()).trim();
             System.out.println("<-- " + data);
 
             if (data.equals("%OKTHX%")) {
@@ -50,6 +50,10 @@ public class Client {
                 transport.sendMissing(missing);
                 transport.send("%FIN%");
             }
+
+            // nettoie le buffer
+            for (int i = 0; i < buf.length; i++)
+                buf[i] = 0;
         }
     }
 }
