@@ -28,12 +28,12 @@ public class Transport extends CoucheProto {
         nextCouche.send('%' + nomFichier + ':' + morceaux.size());
 
         // envoyer les paquets et un identificateur pour chaque
-        Integer id = 0;
+        int id = 0;
         nPaquets = morceaux.size();
         paquets = new String[nPaquets];
         for (String morceau : morceaux) {
             paquets[id] = morceau;
-            nextCouche.send((id++).toString() + ':' + morceau); // data contient id:morceau
+            nextCouche.send(Integer.toString(id++) + ':' + morceau); // data contient id:morceau
         }
 
         nextCouche.send("%FIN%");
@@ -56,8 +56,8 @@ public class Transport extends CoucheProto {
      *
      * @throws MissingPacketsException si des paquest sont manquants dans la transmission
      * @throws TransmissionErrorException si plus de 3 erreurs de paquets surviennent
-     * @return true si le mots clef de fin est obtenu et il ne manque aucun paquet
-     * @return false si la toute l'information n'a pas encore ete recu
+     * @return true si le mots clef de fin est obtenu et il ne manque aucun paquet,
+     *         false si la toute l'information n'a pas encore ete recu
      * @param data  L'information contenu dans le paquet recu
      */
     public boolean recv(final String data) throws java.io.IOException, MissingPacketsException, TransmissionErrorException {
@@ -100,8 +100,8 @@ public class Transport extends CoucheProto {
      * @param data Contient le contenu d'un fichier sous format String
      */
     private List<String> packageData(final String data) {
-        List<String> morceaux = new ArrayList<String>();
-        String morceau = null;
+        List<String> morceaux = new ArrayList<>();
+        String morceau;
 
         int i = 0;
         final int size = 128;
@@ -121,11 +121,11 @@ public class Transport extends CoucheProto {
      * @return Le contenu du fichier reconstruit
      */
     private String unpackData() {
-        String contenu = "";
+        StringBuilder contenu = new StringBuilder();
         for (int i = 0; i < nPaquets; i++)
-            contenu += paquets[i];
+            contenu.append(paquets[i]);
 
-        return contenu;
+        return contenu.toString();
     }
 
     /**
@@ -146,7 +146,7 @@ public class Transport extends CoucheProto {
      * @return La list contenant les ids de paquets manquant
      */
     private List<Integer> getMissingPackets() {
-        List<Integer> missing = new ArrayList<Integer>();
+        List<Integer> missing = new ArrayList<>();
         for (int i = 0; i < nPaquets; i++)
             if (paquets[i] == null)
                 missing.add(i);

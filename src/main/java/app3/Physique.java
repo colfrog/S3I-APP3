@@ -7,9 +7,9 @@ import java.net.InetAddress;
 import java.util.List;
 
 public class Physique extends CoucheProto {
-    private DatagramSocket socket;
-    private InetAddress remote;
-    private int port;
+    private final DatagramSocket socket;
+    private final InetAddress remote;
+    private final int port;
 
     /**
      * Creer un objet de type physique qui permet de gerer un socket
@@ -46,16 +46,15 @@ public class Physique extends CoucheProto {
             boolean done = nextCouche.recv(data);
             if (done) {
                 send("%OKTHX%");
-                return done;
+                return true;
             }
         } catch (MissingPacketsException e) {
-            String message = "%MISSING%";
+            StringBuilder message = new StringBuilder("%MISSING%");
             List<Integer> missing = e.getMissingPackets();
-            for (int i = 0; i < missing.size(); i++) {
-                message += ":" + missing.get(i).toString();
-            }
+            for (Integer id : missing)
+                message.append(":").append(id.toString());
 
-            send(message);
+            send(message.toString());
         } catch (TransmissionErrorException | IOException e) {
             send("%ERROR%:" + e.toString());
         }

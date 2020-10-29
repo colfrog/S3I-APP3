@@ -1,14 +1,11 @@
 package app3;
 
-import java.util.List;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.CRC32;
 
 public class Liaison extends CoucheProto {
-    private CRC32 crc = new CRC32();
+    private final CRC32 crc = new CRC32();
+    private int paquetsSabotes = 0;
 
     /**
      * Ajoute un checksum a l'information et l'envoie a la couche physique
@@ -23,8 +20,11 @@ public class Liaison extends CoucheProto {
 
         crc.reset();
         crc.update(data.getBytes());
+
         String contenu = data;
-        // contenu = sabotage(contenu);
+        if (paquetsSabotes++ < 3)
+            contenu = sabotage(contenu);
+
         nextCouche.send(contenu + ':' + crc.getValue()); // data contient id:morceau:crc
     }
 
@@ -69,10 +69,10 @@ public class Liaison extends CoucheProto {
         byte oldValue = byteArray[index];
 
         int mask = 1 << bitToChange;
-        byteArray[index] = (byte) ((byteArray[index] & ~mask) | ((1 << bitToChange) & mask));
+        byteArray[index] = (byte) ((byteArray[index] & ~mask) | mask);
 
-        if(byteArray[index] == oldValue){
-            byteArray[index] = (byte) ((byteArray[index] & ~mask) | ((0 << bitToChange) & mask));
+        if(byteArray[index] == oldValue) {
+            byteArray[index] = (byte) (byteArray[index] & ~mask);
         }
 
         return new String(byteArray, StandardCharsets.UTF_8);

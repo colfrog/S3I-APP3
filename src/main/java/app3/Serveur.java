@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Serveur {
-    private static Map<InetAddress, Couche> handlers = new HashMap<InetAddress, Couche>();
+    private static final Map<InetAddress, Couche> handlers = new HashMap<>();
 
     public static void main(String[] args) throws IOException, MissingPacketsException, TransmissionErrorException {
         int port = 1337;
@@ -17,10 +17,9 @@ public class Serveur {
         byte[] buf = new byte[256];
         DatagramPacket dgram = new DatagramPacket(buf, buf.length);
 
-        Couche handler;
         InetAddress remote;
         int remotePort;
-        while (true) {
+        while (!socket.isClosed()) {
             socket.receive(dgram);
             remote = dgram.getAddress();
             remotePort = dgram.getPort();
@@ -32,8 +31,7 @@ public class Serveur {
                 handlers.remove(remote);
 
             // nettoie le buffer
-            for (int i = 0; i < buf.length; i++)
-                buf[i] = 0;
+            Arrays.fill(buf, (byte) 0);
         }
     }
 

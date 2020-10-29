@@ -4,6 +4,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Client {
@@ -27,7 +28,7 @@ public class Client {
         byte[] buf = new byte[256];
         DatagramPacket packet = new DatagramPacket(buf, buf.length);
         String data;
-        List<Integer> missing = new ArrayList<Integer>();
+        List<Integer> missing = new ArrayList<>();
         while (true) {
             socket.receive(packet);
             data = new String(packet.getData()).trim();
@@ -52,8 +53,7 @@ public class Client {
             }
 
             // nettoie le buffer
-            for (int i = 0; i < buf.length; i++)
-                buf[i] = 0;
+            Arrays.fill(buf, (byte) 0);
         }
     }
 }

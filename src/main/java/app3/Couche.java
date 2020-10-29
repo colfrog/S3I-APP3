@@ -6,19 +6,19 @@ public interface Couche {
      *
      * @param c  L'objet qui sera définit comme prochaine couche
      */
-    public void setNextCouche(Couche c);
+    void setNextCouche(Couche c);
 
     /**
      * Applique la méthode send sur des données, possiblement sur plusieurs couches
      *
      * @param data  Les données sur lesquelles appliquer la méthode send
      */
-    public void send(final String data) throws java.io.IOException;
+    void send(final String data) throws java.io.IOException;
 
     /**
      * Applique la méthode recv sur des données, possiblement sur plusieurs couches
      *
      * @param data  Les données sur lesquelles appliquer la méthode recv
      */
-    public boolean recv(final String data) throws java.io.IOException, MissingPacketsException, TransmissionErrorException;
+    boolean recv(final String data) throws java.io.IOException, MissingPacketsException, TransmissionErrorException;
 }
